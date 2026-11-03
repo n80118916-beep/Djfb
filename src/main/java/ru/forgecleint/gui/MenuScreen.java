@@ -44,15 +44,15 @@ public class MenuScreen extends Screen {
         fill(matrixStack, x, y, x + sidebarWidth, y + height, SIDE);
         fill(matrixStack, x + sidebarWidth, y, x + sidebarWidth + 2, y + height, ACCENT);
 
-        // ИСПРАВЛЕНО: вернули matrixStack
+        // ИСПРАВЛЕНО: drawShadow вместо drawStringWithShadow
         fill(matrixStack, x + 15, y + 15, x + 35, y + 35, ACCENT);
-        font.drawStringWithShadow(matrixStack, "ForgeClient", x + 45, y + 23, TEXT);
+        font.drawShadow(matrixStack, "ForgeClient", x + 45, y + 23, TEXT);
 
         int catY = y + 60;
         for (String cat : categories) {
             boolean active = category.equals(cat);
             if (active) fill(matrixStack, x + 10, catY - 4, x + sidebarWidth - 10, catY + 15, new Color(155, 89, 255, 60).getRGB());
-            font.drawStringWithShadow(matrixStack, cat, x + 20, catY, active ? TEXT : TEXT_DIS);
+            font.drawShadow(matrixStack, cat, x + 20, catY, active ? TEXT : TEXT_DIS);
             catY += 25;
         }
 
@@ -69,8 +69,7 @@ public class MenuScreen extends Screen {
             fill(matrixStack, mX, mY, mX + 150, mY + 35, mod.enabled ? new Color(40, 20, 60).getRGB() : MOD_OFF);
             drawBorder(matrixStack, mX, mY, 150, 35, mod.enabled ? ACCENT : new Color(50, 50, 60).getRGB());
             
-            // ИСПРАВЛЕНО: вернули matrixStack
-            font.drawStringWithShadow(matrixStack, mod.name, mX + 10, mY + 14, mod.enabled ? TEXT : TEXT_DIS);
+            font.drawShadow(matrixStack, mod.name, mX + 10, mY + 14, mod.enabled ? TEXT : TEXT_DIS);
 
             fill(matrixStack, mX + 125, mY + 15, mX + 140, mY + 20, mod.enabled ? ACCENT : new Color(60, 60, 70).getRGB());
 
@@ -114,7 +113,7 @@ public class MenuScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            this.minecraft.displayGuiScreen(null); // В Mojang маппингах это displayGuiScreen
+            this.minecraft.setScreen(null); // ИСПРАВЛЕНО: setScreen
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
