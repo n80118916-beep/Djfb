@@ -17,4 +17,7 @@ public class Module {
     public void toggle() {
         this.enabled = !this.enabled;
     }
+
+    // Этот метод будет вызываться каждый тик игры (для логики ауры)
+    public void onUpdate() {}
 }
