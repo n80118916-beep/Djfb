@@ -48,7 +48,6 @@ public class ModernScreen extends Screen {
                 new LiteralText("Profile Settings"),
                 "Change your visual preferences and layout",
                 button -> {
-                    // Action to execute when clicked
                     System.out.println("Profile Settings Clicked!");
                 }
         ));
@@ -75,7 +74,7 @@ public class ModernScreen extends Screen {
                 x + 210, y + 190, 170, 25,
                 new LiteralText("Close"),
                 "Return to the game",
-                button -> this.client.openScreen(null) // openScreen для 1.16.5
+                button -> this.client.openScreen(null)
         ));
     }
 
@@ -99,9 +98,8 @@ public class ModernScreen extends Screen {
         // 4. Draw Header Area
         DrawableHelper.fill(matrices, x, y, x + width, y + 40, COLOR_HEADER);
         
-        // 5. Draw Accent Border (Top and Bottom)
-        // ИСПРАВЛЕНО: вернули matrices первым аргументом!
-        DrawableHelper.fillGradient(matrices, x, y, x + width, y + 2, COLOR_ACCENT, 0xFF3B82F6);
+        // 5. Draw Accent Border (ИСПРАВЛЕНО: вызываем fillGradient напрямую)
+        fillGradient(matrices, x, y, x + width, y + 2, COLOR_ACCENT, 0xFF3B82F6);
         DrawableHelper.fill(matrices, x, y + 40, x + width, y + 41, 0xFF3F3F46);
 
         // 6. Draw Title and Subtitle
@@ -175,4 +173,4 @@ public class ModernScreen extends Screen {
             );
         }
     }
-                }
+}
