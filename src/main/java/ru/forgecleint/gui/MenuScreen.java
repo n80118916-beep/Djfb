@@ -2,7 +2,6 @@ package ru.forgeclient.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.StringTextComponent;
 import org.lwjgl.glfw.GLFW;
 import ru.forgeclient.module.Module;
@@ -49,16 +48,16 @@ public class MenuScreen extends Screen {
         fill(matrixStack, x, y, x + sidebarWidth, y + height, SIDE);
         fill(matrixStack, x + sidebarWidth, y, x + sidebarWidth + 2, y + height, ACCENT);
 
-        // Лого
+        // Лого (ИСПРАВЛЕНО: убран matrixStack из drawStringWithShadow)
         fill(matrixStack, x + 15, y + 15, x + 35, y + 35, ACCENT);
-        font.drawStringWithShadow(matrixStack, "ForgeClient", x + 45, y + 23, TEXT);
+        font.drawStringWithShadow("ForgeClient", x + 45, y + 23, TEXT);
 
         // Категории
         int catY = y + 60;
         for (String cat : categories) {
             boolean active = category.equals(cat);
             if (active) fill(matrixStack, x + 10, catY - 4, x + sidebarWidth - 10, catY + 15, new Color(155, 89, 255, 60).getRGB());
-            font.drawStringWithShadow(matrixStack, cat, x + 20, catY, active ? TEXT : TEXT_DIS);
+            font.drawStringWithShadow(cat, x + 20, catY, active ? TEXT : TEXT_DIS);
             catY += 25;
         }
 
@@ -75,7 +74,9 @@ public class MenuScreen extends Screen {
 
             fill(matrixStack, mX, mY, mX + 150, mY + 35, mod.enabled ? new Color(40, 20, 60).getRGB() : MOD_OFF);
             drawBorder(matrixStack, mX, mY, 150, 35, mod.enabled ? ACCENT : new Color(50, 50, 60).getRGB());
-            font.drawStringWithShadow(matrixStack, mod.name, mX + 10, mY + 14, mod.enabled ? TEXT : TEXT_DIS);
+            
+            // ИСПРАВЛЕНО: убран matrixStack
+            font.drawStringWithShadow(mod.name, mX + 10, mY + 14, mod.enabled ? TEXT : TEXT_DIS);
 
             // Кружок (Тумблер)
             fill(matrixStack, mX + 125, mY + 15, mX + 140, mY + 20, mod.enabled ? ACCENT : new Color(60, 60, 70).getRGB());
@@ -120,7 +121,7 @@ public class MenuScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            this.minecraft.displayGuiScreen(null);
+            this.minecraft.setScreen(null); // ИСПРАВЛЕНО: setScreen вместо displayGuiScreen
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -137,4 +138,4 @@ public class MenuScreen extends Screen {
         fill(m, x, y, x + 1, y + h, color);
         fill(m, x + w - 1, y, x + w, y + h, color);
     }
-              }
+}
