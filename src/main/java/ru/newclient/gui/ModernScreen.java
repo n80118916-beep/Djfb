@@ -75,7 +75,7 @@ public class ModernScreen extends Screen {
                 x + 210, y + 190, 170, 25,
                 new LiteralText("Close"),
                 "Return to the game",
-                button -> this.client.openScreen(null) // ИСПРАВЛЕНО: openScreen вместо setScreen
+                button -> this.client.openScreen(null) // openScreen для 1.16.5
         ));
     }
 
@@ -99,24 +99,23 @@ public class ModernScreen extends Screen {
         // 4. Draw Header Area
         DrawableHelper.fill(matrices, x, y, x + width, y + 40, COLOR_HEADER);
         
-        // 5. Draw Accent Border (Top and Bottom) - ИСПРАВЛЕНО: убран MatrixStack из fillGradient
-        DrawableHelper.fillGradient(x, y, x + width, y + 2, COLOR_ACCENT, 0xFF3B82F6);
+        // 5. Draw Accent Border (Top and Bottom)
+        // ИСПРАВЛЕНО: вернули matrices первым аргументом!
+        DrawableHelper.fillGradient(matrices, x, y, x + width, y + 2, COLOR_ACCENT, 0xFF3B82F6);
         DrawableHelper.fill(matrices, x, y + 40, x + width, y + 41, 0xFF3F3F46);
 
         // 6. Draw Title and Subtitle
         this.textRenderer.drawWithShadow(matrices, "TusiClient", x + 20, y + 12, COLOR_ACCENT);
         this.textRenderer.drawWithShadow(matrices, "v1.0.0", x + 20, y + 24, COLOR_TEXT_DESC);
 
-        // 7. Draw Buttons (super.render calls the render method of all registered buttons)
+        // 7. Draw Buttons
         super.render(matrices, mouseX, mouseY, delta);
 
-        // 8. Render Tooltips (Must be drawn last so they are on top of everything)
+        // 8. Render Tooltips
         for (ModernButton btn : modernButtons) {
             if (btn.isHovered() && btn.tooltip != null) {
-                // Draw a dark background for the tooltip
                 int tooltipWidth = this.textRenderer.getWidth(btn.tooltip) + 6;
                 DrawableHelper.fill(matrices, mouseX + 10, mouseY - 12, mouseX + 10 + tooltipWidth, mouseY - 2, 0xF0000000);
-                // Draw the tooltip text
                 this.textRenderer.drawWithShadow(matrices, btn.tooltip, mouseX + 13, mouseY - 10, 0xFFDDDDDD);
             }
         }
@@ -124,9 +123,8 @@ public class ModernScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        // Close GUI with ESC
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            this.client.openScreen(null); // ИСПРАВЛЕНО
+            this.client.openScreen(null);
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -134,12 +132,9 @@ public class ModernScreen extends Screen {
 
     @Override
     public boolean isPauseScreen() {
-        return false; // Game keeps running in background
+        return false;
     }
 
-    /**
-     * Custom Button Widget with modern styling and hover effects.
-     */
     private static class ModernButton extends ButtonWidget {
         private final String tooltip;
 
@@ -152,28 +147,23 @@ public class ModernScreen extends Screen {
         public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             boolean hovered = this.isHovered();
             
-            // Determine colors based on hover state
             int bgColor = hovered ? 0xFF2A2A32 : 0xFF1E1E24;
             int borderColor = hovered ? 0xFF8A2BE2 : 0xFF3F3F46;
             int textColor = hovered ? 0xFF8A2BE2 : 0xFFFFFFFF;
 
-            // Draw Button Background
             DrawableHelper.fill(matrices, this.x, this.y, this.x + this.width, this.y + this.height, bgColor);
             
-            // Draw Button Border (1px)
-            DrawableHelper.fill(matrices, this.x, this.y, this.x + this.width, this.y + 1, borderColor); // Top
-            DrawableHelper.fill(matrices, this.x, this.y + this.height - 1, this.x + this.width, this.y + this.height, borderColor); // Bottom
-            DrawableHelper.fill(matrices, this.x, this.y, this.x + 1, this.y + this.height, borderColor); // Left
-            DrawableHelper.fill(matrices, this.x + this.width - 1, this.y, this.x + this.width, this.y + this.height, borderColor); // Right
+            DrawableHelper.fill(matrices, this.x, this.y, this.x + this.width, this.y + 1, borderColor);
+            DrawableHelper.fill(matrices, this.x, this.y + this.height - 1, this.x + this.width, this.y + this.height, borderColor);
+            DrawableHelper.fill(matrices, this.x, this.y, this.x + 1, this.y + this.height, borderColor);
+            DrawableHelper.fill(matrices, this.x + this.width - 1, this.y, this.x + this.width, this.y + this.height, borderColor);
 
-            // Draw Left Accent Line on Hover
             if (hovered) {
                 DrawableHelper.fill(matrices, this.x, this.y, this.x + 3, this.y + this.height, 0xFF8A2BE2);
             }
 
-            // Draw Text Centered
             String text = this.getMessage().getString();
-            int textWidth = MinecraftClient.getInstance().textRenderer.getWidth(text); // ИСПРАВЛЕНО: добавлен импорт
+            int textWidth = MinecraftClient.getInstance().textRenderer.getWidth(text);
             int textY = this.y + (this.height - 8) / 2;
             
             MinecraftClient.getInstance().textRenderer.drawWithShadow(
@@ -185,4 +175,4 @@ public class ModernScreen extends Screen {
             );
         }
     }
-}
+                }
