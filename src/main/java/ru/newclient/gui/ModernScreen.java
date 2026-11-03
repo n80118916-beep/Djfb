@@ -1,5 +1,6 @@
 package ru.newclient.gui;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -74,7 +75,7 @@ public class ModernScreen extends Screen {
                 x + 210, y + 190, 170, 25,
                 new LiteralText("Close"),
                 "Return to the game",
-                button -> this.client.setScreen(null) // Closes the screen
+                button -> this.client.openScreen(null) // ИСПРАВЛЕНО: openScreen вместо setScreen
         ));
     }
 
@@ -98,8 +99,8 @@ public class ModernScreen extends Screen {
         // 4. Draw Header Area
         DrawableHelper.fill(matrices, x, y, x + width, y + 40, COLOR_HEADER);
         
-        // 5. Draw Accent Border (Top and Bottom)
-        DrawableHelper.fillGradient(matrices, x, y, x + width, y + 2, COLOR_ACCENT, 0xFF3B82F6);
+        // 5. Draw Accent Border (Top and Bottom) - ИСПРАВЛЕНО: убран MatrixStack из fillGradient
+        DrawableHelper.fillGradient(x, y, x + width, y + 2, COLOR_ACCENT, 0xFF3B82F6);
         DrawableHelper.fill(matrices, x, y + 40, x + width, y + 41, 0xFF3F3F46);
 
         // 6. Draw Title and Subtitle
@@ -125,7 +126,7 @@ public class ModernScreen extends Screen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         // Close GUI with ESC
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            this.client.setScreen(null);
+            this.client.openScreen(null); // ИСПРАВЛЕНО
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -153,8 +154,8 @@ public class ModernScreen extends Screen {
             
             // Determine colors based on hover state
             int bgColor = hovered ? 0xFF2A2A32 : 0xFF1E1E24;
-            int borderColor = hovered ? COLOR_ACCENT : 0xFF3F3F46;
-            int textColor = hovered ? COLOR_ACCENT : COLOR_TEXT;
+            int borderColor = hovered ? 0xFF8A2BE2 : 0xFF3F3F46;
+            int textColor = hovered ? 0xFF8A2BE2 : 0xFFFFFFFF;
 
             // Draw Button Background
             DrawableHelper.fill(matrices, this.x, this.y, this.x + this.width, this.y + this.height, bgColor);
@@ -167,13 +168,12 @@ public class ModernScreen extends Screen {
 
             // Draw Left Accent Line on Hover
             if (hovered) {
-                DrawableHelper.fill(matrices, this.x, this.y, this.x + 3, this.y + this.height, COLOR_ACCENT);
+                DrawableHelper.fill(matrices, this.x, this.y, this.x + 3, this.y + this.height, 0xFF8A2BE2);
             }
 
             // Draw Text Centered
             String text = this.getMessage().getString();
-            int textWidth = MinecraftClient.getInstance().textRenderer.getWidth(text);
-            // Vertically center the text (8 is standard font height)
+            int textWidth = MinecraftClient.getInstance().textRenderer.getWidth(text); // ИСПРАВЛЕНО: добавлен импорт
             int textY = this.y + (this.height - 8) / 2;
             
             MinecraftClient.getInstance().textRenderer.drawWithShadow(
@@ -185,4 +185,4 @@ public class ModernScreen extends Screen {
             );
         }
     }
-                     }
+}
