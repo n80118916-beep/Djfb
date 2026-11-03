@@ -18,9 +18,9 @@ public class KeyInputHandler {
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
-            // ИСПРАВЛЕНО: isKeyDown и displayGuiScreen для Mojang маппингов
-            if (OPEN_GUI.isKeyDown() && Minecraft.getInstance().currentScreen == null) {
-                Minecraft.getInstance().displayGuiScreen(new MenuScreen());
+            // ИСПРАВЛЕНО: screen вместо currentScreen, setScreen вместо displayGuiScreen
+            if (OPEN_GUI.isKeyDown() && Minecraft.getInstance().screen == null) {
+                Minecraft.getInstance().setScreen(new MenuScreen());
             }
         }
     }
