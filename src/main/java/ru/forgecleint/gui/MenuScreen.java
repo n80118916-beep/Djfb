@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MenuScreen extends Screen {
-    // Цвета
     private final int BG = new Color(15, 15, 18, 245).getRGB();
     private final int SIDE = new Color(22, 22, 28, 245).getRGB();
     private final int ACCENT = new Color(155, 89, 255).getRGB();
@@ -40,28 +39,23 @@ public class MenuScreen extends Screen {
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
 
-        // Тень
         fill(matrixStack, x + 2, y + 2, x + width + 2, y + height + 2, new Color(0, 0, 0, 100).getRGB());
-        // Фон
         fill(matrixStack, x, y, x + width, y + height, BG);
-        // Сайдбар
         fill(matrixStack, x, y, x + sidebarWidth, y + height, SIDE);
         fill(matrixStack, x + sidebarWidth, y, x + sidebarWidth + 2, y + height, ACCENT);
 
-        // Лого (ИСПРАВЛЕНО: убран matrixStack из drawStringWithShadow)
+        // ИСПРАВЛЕНО: вернули matrixStack
         fill(matrixStack, x + 15, y + 15, x + 35, y + 35, ACCENT);
-        font.drawStringWithShadow("ForgeClient", x + 45, y + 23, TEXT);
+        font.drawStringWithShadow(matrixStack, "ForgeClient", x + 45, y + 23, TEXT);
 
-        // Категории
         int catY = y + 60;
         for (String cat : categories) {
             boolean active = category.equals(cat);
             if (active) fill(matrixStack, x + 10, catY - 4, x + sidebarWidth - 10, catY + 15, new Color(155, 89, 255, 60).getRGB());
-            font.drawStringWithShadow(cat, x + 20, catY, active ? TEXT : TEXT_DIS);
+            font.drawStringWithShadow(matrixStack, cat, x + 20, catY, active ? TEXT : TEXT_DIS);
             catY += 25;
         }
 
-        // Модули
         int modX = x + sidebarWidth + 20;
         int modY = y + 20;
         int col = 0;
@@ -75,10 +69,9 @@ public class MenuScreen extends Screen {
             fill(matrixStack, mX, mY, mX + 150, mY + 35, mod.enabled ? new Color(40, 20, 60).getRGB() : MOD_OFF);
             drawBorder(matrixStack, mX, mY, 150, 35, mod.enabled ? ACCENT : new Color(50, 50, 60).getRGB());
             
-            // ИСПРАВЛЕНО: убран matrixStack
-            font.drawStringWithShadow(mod.name, mX + 10, mY + 14, mod.enabled ? TEXT : TEXT_DIS);
+            // ИСПРАВЛЕНО: вернули matrixStack
+            font.drawStringWithShadow(matrixStack, mod.name, mX + 10, mY + 14, mod.enabled ? TEXT : TEXT_DIS);
 
-            // Кружок (Тумблер)
             fill(matrixStack, mX + 125, mY + 15, mX + 140, mY + 20, mod.enabled ? ACCENT : new Color(60, 60, 70).getRGB());
 
             col++;
@@ -121,7 +114,7 @@ public class MenuScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            this.minecraft.setScreen(null); // ИСПРАВЛЕНО: setScreen вместо displayGuiScreen
+            this.minecraft.displayGuiScreen(null); // В Mojang маппингах это displayGuiScreen
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
